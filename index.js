@@ -118,6 +118,8 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                 logText=", Humidity : "+humidity;
 
+                this.log(logText);
+
                 callback();
             }
         }.bind(this));
