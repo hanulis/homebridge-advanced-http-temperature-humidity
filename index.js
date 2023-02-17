@@ -28,6 +28,9 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.serial = config["serial"] || "18981898";
 
     this.disableHumidity = config["disableHumidity"] || false;
+
+    // add opt
+    this.pollInterval = config.pollInterval || 60
 }
 
 AdvancedHttpTemperatureHumidity.prototype = {
@@ -65,12 +68,18 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                 var temperature = parseFloat(info.temperature);
 
+                let logText="Temperature : "+temperature;
+
                 if (this.humidityService !== false) {
                     var humidity = parseFloat(info.humidity)
 
                     this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                     this.humidity = humidity;
+
+                    logText=", Humidity : "+humidity;
                 }
+
+                this.log(logText);
 
                 callback(null, temperature);
             }
@@ -80,6 +89,37 @@ AdvancedHttpTemperatureHumidity.prototype = {
     identify: function (callback) {
         this.log("Identify requested!");
         callback(); // success
+    },
+
+    _update: function(callback) {
+        this.httpRequest(this.url, "", this.http_method, this.username, this.password, this.sendimmediately, function (error, response, responseBody) {
+
+            if (error) {
+                this.log('UPDATE - Get Temperature failed: %s', error.message);
+                callback(error);
+            } else {
+                this.log('UPDATE - Get Temperature succeeded!');
+                var info = JSON.parse(responseBody);
+
+                var temperature = parseFloat(info.temperature);
+
+                let logText="UPDATE Temperature : "+temperature;
+                if (this.humidityService !== false) {
+                    var humidity = parseFloat(info.humidity)
+
+                    this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                    this.humidity = humidity;
+
+                    logText=", Humidity : "+humidity;
+                }
+
+                this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, temperature);
+
+                logText=", Humidity : "+humidity;
+
+                callback();
+            }
+        }.bind(this));
     },
 
     getServices: function () {
@@ -106,6 +146,10 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 .on('get', this.getStateHumidity.bind(this));
             services.push(this.humidityService);
         }
+
+        setInterval(function () {
+            this._update(function () {})
+        }.bind(this), this.pollInterval * 1000)        
 
         return services;
     }
