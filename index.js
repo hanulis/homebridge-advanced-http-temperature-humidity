@@ -76,7 +76,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                     this.humidity = humidity;
 
-                    logText=", Humidity : "+humidity;
+                    logText+=", Humidity : "+humidity;
                 }
 
                 this.log(logText);
@@ -110,7 +110,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                     this.humidity = humidity;
 
-                    logText=", Humidity : "+humidity;
+                    logText+=", Humidity : "+humidity;
                 }
 
                 this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, temperature);
