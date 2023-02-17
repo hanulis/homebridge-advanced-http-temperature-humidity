@@ -99,7 +99,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 this.log('UPDATE - Get Temperature failed: %s', error.message);
                 callback(error);
             } else {
-                this.log('UPDATE - Get Temperature succeeded!');
+                // this.log('UPDATE - Get Temperature succeeded!');
                 var info = JSON.parse(responseBody);
 
                 var temperature = parseFloat(info.temperature);
@@ -116,7 +116,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                 this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, temperature);
 
-                this.log(logText);
+                // this.log(logText);
 
                 callback();
             }
