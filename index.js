@@ -10,6 +10,7 @@ module.exports = function (homebridge) {
 function AdvancedHttpTemperatureHumidity(log, config) {
     this.log = log;
     this.humidityService = false;
+    this.temperatureService = false;
 
     // Set default values
     this.humidity = 0;
@@ -132,11 +133,11 @@ AdvancedHttpTemperatureHumidity.prototype = {
             .setCharacteristic(Characteristic.SerialNumber, this.serial);
         services.push(informationService);
 
-        temperatureService = new Service.TemperatureSensor(this.name);
-        temperatureService
+        this.temperatureService = new Service.TemperatureSensor(this.name);
+        this.temperatureService
             .getCharacteristic(Characteristic.CurrentTemperature)
             .on('get', this.getState.bind(this));
-        services.push(temperatureService);
+        services.push(this.temperatureService);
 
         if (this.disableHumidity !== true) {
             this.humidityService = new Service.HumiditySensor(this.name);
