@@ -100,25 +100,29 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 callback(error);
             } else {
                 // this.log('UPDATE - Get Temperature succeeded!');
-                var info = JSON.parse(responseBody);
+                if(responseBody) {
+                    var info = JSON.parse(responseBody);
 
-                var temperature = parseFloat(info.temperature);
+                    if(info && info.temperature) {
+                        var temperature = parseFloat(info.temperature);
 
-                let logText="UPDATE Temperature : "+temperature;
-                if (this.humidityService !== false) {
-                    var humidity = parseFloat(info.humidity)
+                        let logText="UPDATE Temperature : "+temperature;
+                        if (this.humidityService !== false) {
+                            var humidity = parseFloat(info.humidity)
 
-                    this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
-                    this.humidity = humidity;
+                            this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                            this.humidity = humidity;
 
-                    logText+=", Humidity : "+humidity;
+                            logText+=", Humidity : "+humidity;
+                        }
+
+                        this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
+
+                        // this.log(logText);
+
+                        callback();
+                    }
                 }
-
-                this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
-
-                // this.log(logText);
-
-                callback();
             }
         }.bind(this));
     },
