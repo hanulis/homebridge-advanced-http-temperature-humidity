@@ -74,7 +74,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 if (this.humidityService !== false) {
                     var humidity = parseFloat(info.humidity)
 
-                    this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                    this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                     this.humidity = humidity;
 
                     logText+=", Humidity : "+humidity;
@@ -108,13 +108,13 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 if (this.humidityService !== false) {
                     var humidity = parseFloat(info.humidity)
 
-                    this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                    this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                     this.humidity = humidity;
 
                     logText+=", Humidity : "+humidity;
                 }
 
-                this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, temperature);
+                this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
 
                 // this.log(logText);
 
