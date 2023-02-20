@@ -3,7 +3,7 @@
 ## Installation
 
 1. Install homebridge using: npm install -g homebridge
-2. Install homebridge-advanced-http-temperature-humidity using: npm install -g homebridge-advanced-http-temperature-humidity
+2. Install homebridge-advanced-http-temperature-humidity using: npm install -g git+https://github.com/hanulis/homebridge-advanced-http-temperature-humidity.git
 3. Update your configuration file. See [Example Config](#example-config) for a sample.
 
 ## Configuration
