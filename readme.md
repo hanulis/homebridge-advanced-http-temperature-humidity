@@ -21,6 +21,7 @@
 | model           | Name of the model of the accessory                         | Default                 | false    |
 | serial          | Serial of the accessory                                    | 18981898                | false    |
 | disableHumidity | Should humidity be disabled?                               | false                   | false    |
+| pollInterval    | Polling Interval                                           | 60                      | false    |
 
 ### Example Config
 
@@ -41,7 +42,8 @@
     {
       "accessory": "AdvancedHttpTemperatureHumidity",
       "name": "Temperature and Humidity",
-      "url": "http://192.168.178.210/temp/status"
+      "url": "http://192.168.178.210/temp/status",
+      "pollInterval": 120
     }
   ]
 }
