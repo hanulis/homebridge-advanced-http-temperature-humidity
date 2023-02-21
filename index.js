@@ -64,25 +64,27 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 this.log('Get Temperature failed: %s', error.message);
                 callback(error);
             } else {
-                this.log('Get Temperature succeeded!');
-                var info = JSON.parse(responseBody);
+                try {
+                    this.log('Get Temperature succeeded!');
+                    var info = JSON.parse(responseBody);
 
-                var temperature = parseFloat(info.temperature);
+                    var temperature = parseFloat(info.temperature);
 
-                let logText="Temperature : "+temperature;
+                    let logText="Temperature : "+temperature;
 
-                if (this.humidityService !== false) {
-                    var humidity = parseFloat(info.humidity)
+                    if (this.humidityService !== false) {
+                        var humidity = parseFloat(info.humidity)
 
-                    this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
-                    this.humidity = humidity;
+                        this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                        this.humidity = humidity;
 
-                    logText+=", Humidity : "+humidity;
-                }
+                        logText+=", Humidity : "+humidity;
+                    }
 
-                this.log(logText);
+                    this.log(logText);
 
-                callback(null, temperature);
+                    callback(null, temperature);
+                } catch(e) {}
             }
         }.bind(this));
     },
@@ -101,27 +103,29 @@ AdvancedHttpTemperatureHumidity.prototype = {
             } else {
                 // this.log('UPDATE - Get Temperature succeeded!');
                 if(responseBody) {
-                    var info = JSON.parse(responseBody);
+                    try {
+                        var info = JSON.parse(responseBody);
 
-                    if(info && info.temperature) {
-                        var temperature = parseFloat(info.temperature);
+                        if(info && info.temperature) {
+                            var temperature = parseFloat(info.temperature);
 
-                        let logText="UPDATE Temperature : "+temperature;
-                        if (this.humidityService !== false) {
-                            var humidity = parseFloat(info.humidity)
+                            let logText="UPDATE Temperature : "+temperature;
+                            if (this.humidityService !== false) {
+                                var humidity = parseFloat(info.humidity)
 
-                            this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
-                            this.humidity = humidity;
+                                this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                                this.humidity = humidity;
 
-                            logText+=", Humidity : "+humidity;
+                                logText+=", Humidity : "+humidity;
+                            }
+
+                            this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
+
+                            // this.log(logText);
+
+                            callback();
                         }
-
-                        this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
-
-                        // this.log(logText);
-
-                        callback();
-                    }
+                    } catch(e) {}
                 }
             }
         }.bind(this));
