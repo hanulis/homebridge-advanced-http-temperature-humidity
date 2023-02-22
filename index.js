@@ -75,15 +75,20 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     if (this.humidityService !== false) {
                         var humidity = parseFloat(info.humidity)
 
-                        this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
+                        // this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                         this.humidity = humidity;
 
                         logText+=", Humidity : "+humidity;
                     }
 
-                    this.log(logText);
+                    // this.log(logText);
 
-                    callback(null, temperature);
+                    callback(null);
+
+                    this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
+                    this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
+
+
                 } catch(e) {}
             }
         }.bind(this));
@@ -113,17 +118,18 @@ AdvancedHttpTemperatureHumidity.prototype = {
                             if (this.humidityService !== false) {
                                 var humidity = parseFloat(info.humidity)
 
-                                this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
                                 this.humidity = humidity;
 
                                 logText+=", Humidity : "+humidity;
                             }
 
-                            this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
-
                             // this.log(logText);
 
                             callback();
+
+                            this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
+                            this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
+
                         }
                     } catch(e) {}
                 }
