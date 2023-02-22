@@ -83,7 +83,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                     // this.log(logText);
 
-                    callback(null);
+                    callback(null, temperature);
 
                     this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
                     this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
