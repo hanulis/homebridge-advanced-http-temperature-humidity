@@ -1,5 +1,8 @@
 var Service, Characteristic;
 var request = require('request');
+var { createClient } = require("redis");
+var { TimeSeriesDuplicatePolicies, TimeSeriesEncoding, TimeSeriesAggregationType } = require('@redis/time-series');
+
 
 module.exports = function (homebridge) {
     Service = homebridge.hap.Service;
@@ -32,6 +35,12 @@ function AdvancedHttpTemperatureHumidity(log, config) {
 
     // add opt
     this.pollInterval = config.pollInterval || 60
+
+    this.redisServer = config.redisServer || '';
+    this.redisPort = config.redisPort || 6379;
+    this.redisAuth = config.redisAuth || '';
+    this.redisKey = config.redisKey || '';
+
 }
 
 AdvancedHttpTemperatureHumidity.prototype = {
@@ -123,12 +132,46 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                             // this.log(logText);
 
+                            if(this.redisKey) {
+                                this.saveRedis(temperature, this.humidity);
+                            }
+
                             callback();
                         }
                     } catch(e) {}
                 }
             }
         }.bind(this));
+    },
+
+    saveRedis: async function(temperature, humidity) {
+
+        try {
+            const client = createClient(this.redisServer, this.redisKey);
+
+            if(this.redisAuth) {
+                client.auth(this.redisAuth);
+            }
+
+            // create key
+
+            const created = await client.ts.create('temperature', {
+                RETENTION: 86400000, // 1 day in milliseconds
+                ENCODING: TimeSeriesEncoding.UNCOMPRESSED, // No compression - When not specified, the option is set to COMPRESSED
+                DUPLICATE_POLICY: TimeSeriesDuplicatePolicies.BLOCK, // No duplicates - When not specified: set to the global DUPLICATE_POLICY configuration of the database (which by default, is BLOCK).
+            });        
+
+            const currentTimestamp = Date.now();
+
+            await client.ts.add(this.redisKey+'_temperature', currentTimestamp, temperature);
+
+            if(humidity) {
+                await client.ts.add(this.redisKey+'_humidity', currentTimestamp, humidity);
+            }
+        } catch(e) {
+            
+        }
+
     },
 
     getServices: function () {

@@ -24,6 +24,8 @@
     "homebridge": ">=0.2.0"
   },
   "dependencies": {
+    "@redis/time-series": "^1.0.4",
+    "redis": "^4.6.5",
     "request": "^2.65.0"
   }
 }
