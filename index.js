@@ -153,7 +153,16 @@ AdvancedHttpTemperatureHumidity.prototype = {
     saveRedis: async function(temperature, humidity) {
 
         try {
-            const client = createClient(this.redisServer, this.redisPort);
+            // const client = createClient(this.redisServer, this.redisPort);
+            const client = createClient(
+                {
+                    socket: {
+                        host: this.redisServer,
+                        port: this.redisPort
+                    },
+                    password: this.redisAuth
+                }              
+            );
 
             await client.connect();
 
