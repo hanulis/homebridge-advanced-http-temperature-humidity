@@ -163,7 +163,12 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             // create key
 
-            const created = await client.ts.create('temperature', {
+            const created_temp = await client.ts.create(this.redisKey+'_temperature', {
+                RETENTION: 86400000, // 1 day in milliseconds
+                ENCODING: TimeSeriesEncoding.UNCOMPRESSED, // No compression - When not specified, the option is set to COMPRESSED
+                DUPLICATE_POLICY: TimeSeriesDuplicatePolicies.BLOCK, // No duplicates - When not specified: set to the global DUPLICATE_POLICY configuration of the database (which by default, is BLOCK).
+            });        
+            const created_humi = await client.ts.create(this.redisKey+'_humidity', {
                 RETENTION: 86400000, // 1 day in milliseconds
                 ENCODING: TimeSeriesEncoding.UNCOMPRESSED, // No compression - When not specified, the option is set to COMPRESSED
                 DUPLICATE_POLICY: TimeSeriesDuplicatePolicies.BLOCK, // No duplicates - When not specified: set to the global DUPLICATE_POLICY configuration of the database (which by default, is BLOCK).
@@ -179,7 +184,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             await client.quit();
         } catch(e) {
-
+            console.error(e);
         }
 
     },
