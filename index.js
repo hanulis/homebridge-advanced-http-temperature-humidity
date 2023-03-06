@@ -34,12 +34,12 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.disableHumidity = config["disableHumidity"] || false;
 
     // add opt
-    this.pollInterval = config.pollInterval || 60
+    this.pollInterval = config["pollInterval"] || 60
 
-    this.redisServer = config.redisServer || '';
-    this.redisPort = config.redisPort || 6379;
-    this.redisAuth = config.redisAuth || '';
-    this.redisKey = config.redisKey || '';
+    this.redisServer = config["redisServer"] || '';
+    this.redisPort = config["redisPort"] || 6379;
+    this.redisAuth = config["redisAuth"] || '';
+    this.redisKey = config["redisKey"] || '';
 
 }
 
