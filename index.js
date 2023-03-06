@@ -159,6 +159,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 client.auth(this.redisAuth);
             }
 
+            await client.connect();
             // create key
 
             const created = await client.ts.create('temperature', {
