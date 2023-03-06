@@ -170,9 +170,9 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             await client.connect();
 
-            if(this.redisAuth) {
-                client.auth(this.redisAuth);
-            }
+            // if(this.redisAuth) {
+            //     client.auth(this.redisAuth);
+            // }
 
             // create key
 
