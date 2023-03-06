@@ -172,8 +172,39 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             // if(this.redisAuth) {
             //     client.auth(this.redisAuth);
-            // }
+            // }      
 
+            const currentTimestamp = Date.now();
+
+            await client.ts.add(this.redisKey+'_temperature', currentTimestamp, temperature);
+
+            if(humidity) {
+                await client.ts.add(this.redisKey+'_humidity', currentTimestamp, humidity);
+            }
+
+            await client.quit();
+        } catch(e) {
+            console.error(e);
+        }
+
+    },
+
+    createRedisKey: async function() {
+
+
+        try {
+            // const client = createClient(this.redisServer, this.redisPort);
+            const client = createClient(
+                {
+                    socket: {
+                        host: this.redisServer,
+                        port: this.redisPort
+                    },
+                    password: this.redisAuth
+                }              
+            );
+
+            await client.connect();        
             // create key
 
             const created_temp = await client.ts.create(this.redisKey+'_temperature', {
@@ -185,24 +216,11 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 RETENTION: 86400000, // 1 day in milliseconds
                 ENCODING: TimeSeriesEncoding.UNCOMPRESSED, // No compression - When not specified, the option is set to COMPRESSED
                 DUPLICATE_POLICY: TimeSeriesDuplicatePolicies.BLOCK, // No duplicates - When not specified: set to the global DUPLICATE_POLICY configuration of the database (which by default, is BLOCK).
-            });        
-
-            const currentTimestamp = Date.now();
-
-            await client.ts.add(this.redisKey+'_temperature', currentTimestamp, parseFloat(temperature));
-
-            if(humidity) {
-                await client.ts.add(this.redisKey+'_humidity', currentTimestamp, parseFloat(humidity));
-            }
-
-            await client.quit();
+            }); 
         } catch(e) {
-            console.error(e);
-            console.log(this.redisServer, this.redisPort, this.redisAuth, this.redisKey);
-        }
-
+            
+        }         
     },
-
     getServices: function () {
         var services = [],
             informationService = new Service.AccessoryInformation();
@@ -230,7 +248,11 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
         setInterval(function () {
             this._update(function () {})
-        }.bind(this), this.pollInterval * 1000)        
+        }.bind(this), this.pollInterval * 1000);
+        
+        if(this.redisKey) {
+            this.createRedisKey();
+        }
 
         return services;
     }
