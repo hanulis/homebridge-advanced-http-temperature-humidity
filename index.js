@@ -185,6 +185,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
             await client.quit();
         } catch(e) {
             console.error(e);
+            console.log(this.redisServer, this.redisPort, this.redisAuth, this.redisKey);
         }
 
     },
