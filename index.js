@@ -90,6 +90,10 @@ AdvancedHttpTemperatureHumidity.prototype = {
                         logText+=", Humidity : "+humidity;
                     }
 
+                    if(this.redisKey) {
+                        this.saveRedis(temperature, this.humidity);
+                    }
+
                     // this.log(logText);
 
                     callback(null, temperature);
@@ -185,10 +189,10 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             const currentTimestamp = Date.now();
 
-            await client.ts.add(this.redisKey+'_temperature', currentTimestamp, temperature);
+            await client.ts.add(this.redisKey+'_temperature', currentTimestamp, parseFloat(temperature));
 
             if(humidity) {
-                await client.ts.add(this.redisKey+'_humidity', currentTimestamp, humidity);
+                await client.ts.add(this.redisKey+'_humidity', currentTimestamp, parseFloat(humidity));
             }
 
             await client.quit();
