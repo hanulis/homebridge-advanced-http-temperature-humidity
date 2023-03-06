@@ -174,8 +174,10 @@ AdvancedHttpTemperatureHumidity.prototype = {
             if(humidity) {
                 await client.ts.add(this.redisKey+'_humidity', currentTimestamp, humidity);
             }
+
+            await client.quit();
         } catch(e) {
-            
+
         }
 
     },
