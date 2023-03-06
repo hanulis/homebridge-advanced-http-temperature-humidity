@@ -155,7 +155,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
         try {
             const client = createClient(this.redisServer, this.redisPort);
 
-            // await client.connect();
+            await client.connect();
 
             if(this.redisAuth) {
                 client.auth(this.redisAuth);
