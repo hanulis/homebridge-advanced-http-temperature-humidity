@@ -16,7 +16,8 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.temperatureService = false;
 
     // Set default values
-    this.humidity = 0;
+    this.temperature = 23;
+    this.humidity = 50;
 
     // Config
     this.url = config["url"];
@@ -71,34 +72,33 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             if (error) {
                 this.log('Get Temperature failed: %s', error.message);
-                callback(error);
+                callback(null, this.temperature);
             } else {
                 try {
-                    this.log('Get Temperature succeeded!');
+                    // this.log('Get Temperature succeeded!');
                     var info = JSON.parse(responseBody);
 
-                    var temperature = parseFloat(info.temperature);
+                    this.temperature = parseFloat(info.temperature);
 
-                    let logText="Temperature : "+temperature;
+                    let logText="Temperature : "+this.temperature;
 
                     if (this.humidityService !== false) {
-                        var humidity = parseFloat(info.humidity)
+                        this.humidity = parseFloat(info.humidity)
 
                         // this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, humidity);
-                        this.humidity = humidity;
-
-                        logText+=", Humidity : "+humidity;
+                        // this.humidity = humidity;
+                        logText+=", Humidity : "+this.humidity;
                     }
 
                     if(this.redisKey) {
-                        this.saveRedis(temperature, this.humidity);
+                        this.saveRedis(this.temperature, this.humidity);
                     }
 
-                    // this.log(logText);
+                    this.log("Get Temperature : %s", logText);
 
-                    callback(null, temperature);
+                    callback(null, this.temperature);
 
-                    this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
+                    this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, this.temperature);
                     this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
 
 
@@ -117,7 +117,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             if (error) {
                 this.log('UPDATE - Get Temperature failed: %s', error.message);
-                callback(error);
+                callback();
             } else {
                 // this.log('UPDATE - Get Temperature succeeded!');
                 if(responseBody) {
@@ -125,13 +125,11 @@ AdvancedHttpTemperatureHumidity.prototype = {
                         var info = JSON.parse(responseBody);
 
                         if(info && info.temperature) {
-                            var temperature = parseFloat(info.temperature);
+                            this.temperature = parseFloat(info.temperature);
 
-                            let logText="UPDATE Temperature : "+temperature;
+                            let logText="UPDATE Temperature : "+this.temperature;
                             if (this.humidityService !== false) {
-                                var humidity = parseFloat(info.humidity)
-
-                                this.humidity = humidity;
+                                this.humidity = parseFloat(info.humidity);
 
                                 logText+=", Humidity : "+humidity;
                             }
@@ -139,12 +137,12 @@ AdvancedHttpTemperatureHumidity.prototype = {
                             // this.log(logText);
 
                             if(this.redisKey) {
-                                this.saveRedis(temperature, this.humidity);
+                                this.saveRedis(this.temperature, this.humidity);
                             }
 
                             callback();
 
-                            this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, temperature);
+                            this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, this.temperature);
                             this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
 
                         }
