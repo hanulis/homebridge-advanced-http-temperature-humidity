@@ -244,6 +244,12 @@ AdvancedHttpTemperatureHumidity.prototype = {
             services.push(this.humidityService);
         }
 
+        if(this.pollInterval) {
+            console.log("poll interval : %s", this.pollInterval);
+        } else {
+            console.log("no poll interval");
+        }
+
         setInterval(function () {
             this._update(function () {})
         }.bind(this), this.pollInterval * 1000);
