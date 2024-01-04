@@ -112,11 +112,11 @@ AdvancedHttpTemperatureHumidity.prototype = {
                         }
     
                         // let instance=this;
-                        this.timeoutId=setTimeout(function() {
+                        this.timeoutId=setTimeout(()=>{
                             // this._update(()=>{})
                             // console.log("call poll");
-                            this.getState(callback).bind(this);
-                        }.bind(this), this.pollInterval * 1000);                    
+                            this.getState(callback);
+                        }, this.pollInterval * 1000);                    
     
                     } else {
                         console.log("no poll interval");
