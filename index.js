@@ -42,6 +42,8 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.redisAuth = config["redisAuth"] || '';
     this.redisKey = config["redisKey"] || '';
 
+    this.timeoutId = 0;
+
 }
 
 AdvancedHttpTemperatureHumidity.prototype = {
@@ -102,6 +104,23 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
 
 
+                    if(this.pollInterval) {
+                        // console.log("poll interval : %s", this.pollInterval);
+
+                        if(this.timeoutId) {
+                            clearTimeout(this.timeoutId);
+                        }
+    
+                        let instance=this;
+                        this.timeoutId=setTimeout(()=>{
+                            // this._update(()=>{})
+                            instance.getState(callback).bind(instance);
+                        }, this.pollInterval * 1000);                    
+    
+                    } else {
+                        // console.log("no poll interval");
+                    }
+        
                 } catch(e) {}
             }
         }.bind(this));
@@ -243,16 +262,6 @@ AdvancedHttpTemperatureHumidity.prototype = {
                 .on('get', this.getStateHumidity.bind(this));
             services.push(this.humidityService);
         }
-
-        if(this.pollInterval) {
-            console.log("poll interval : %s", this.pollInterval);
-        } else {
-            console.log("no poll interval");
-        }
-
-        setInterval(function () {
-            this._update(function () {})
-        }.bind(this), this.pollInterval * 1000);
         
         if(this.redisKey) {
             this.createRedisKey();
