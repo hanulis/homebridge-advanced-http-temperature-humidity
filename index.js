@@ -99,7 +99,10 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     this.log("Get Temperature : %s", logText);
 
                     if(callback) {
+                        this.log("call callback");
                         callback(null, this.temperature);
+                    } else {
+                        this.log("no callback");
                     }
 
                     this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, this.temperature);
