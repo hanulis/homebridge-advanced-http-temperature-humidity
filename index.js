@@ -98,8 +98,8 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                     callback(null, this.temperature);
 
-                    this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, this.temperature);
-                    this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
+                    this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, this.temperature);
+                    this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
 
 
                 } catch(e) {}
@@ -134,7 +134,7 @@ AdvancedHttpTemperatureHumidity.prototype = {
                                 logText+=", Humidity : "+humidity;
                             }
 
-                            // this.log(logText);
+                            this.log(logText);
 
                             if(this.redisKey) {
                                 this.saveRedis(this.temperature, this.humidity);
@@ -142,8 +142,8 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                             callback();
 
-                            this.temperatureService.updateCharacteristic(Characteristic.CurrentTemperature, this.temperature);
-                            this.humidityService.updateCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
+                            this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, this.temperature);
+                            this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
 
                         }
                     } catch(e) {}
