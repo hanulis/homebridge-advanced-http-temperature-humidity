@@ -86,7 +86,9 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     // for test
                     this.temperature+=this.testvalue;
                     if(this.testvalue===1) {
-                        this.testvalue=-1;
+                        this.testvalue=-2;
+                    } else {
+                        this.testvalue=2;
                     }
 
                     let logText="Temperature : "+this.temperature;
