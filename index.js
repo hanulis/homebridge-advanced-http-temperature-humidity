@@ -94,7 +94,9 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
             if (error) {
                 this.log('Get Temperature failed: %s, prev temp : %s', error.message, this.temperature);
-                callback(null, this.temperature);
+                if(callback) {
+                    callback(null, this.temperature);
+                }
             } else {
                 try {
                     // this.log('Get Temperature succeeded!');
