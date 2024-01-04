@@ -84,12 +84,12 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     this.temperature = parseFloat(info.temperature);
 
                     // for test
-                    this.temperature+=this.testvalue;
-                    if(this.testvalue===2) {
-                        this.testvalue=-2;
-                    } else {
-                        this.testvalue=2;
-                    }
+                    // this.temperature+=this.testvalue;
+                    // if(this.testvalue===2) {
+                    //     this.testvalue=-2;
+                    // } else {
+                    //     this.testvalue=2;
+                    // }
 
                     let logText="Temperature : "+this.temperature;
 
