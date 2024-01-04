@@ -43,6 +43,7 @@ function AdvancedHttpTemperatureHumidity(log, config) {
     this.redisKey = config["redisKey"] || '';
 
     this.timeoutId = 0;
+    this.testvalue = 1;
 
 }
 
@@ -81,6 +82,12 @@ AdvancedHttpTemperatureHumidity.prototype = {
                     var info = JSON.parse(responseBody);
 
                     this.temperature = parseFloat(info.temperature);
+
+                    // for test
+                    this.temperature+=this.testvalue;
+                    if(this.testvalue===1) {
+                        this.testvalue=-1;
+                    }
 
                     let logText="Temperature : "+this.temperature;
 
