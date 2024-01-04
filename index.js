@@ -98,14 +98,15 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                     this.log("Get Temperature : %s", logText);
 
-                    callback(null, this.temperature);
+                    if(callback) {
+                        callback(null, this.temperature);
+                    }
 
                     this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, this.temperature);
                     this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
 
-
                     if(this.pollInterval) {
-                        console.log("poll interval : %s", this.pollInterval);
+                        this.log("poll interval : %s", this.pollInterval);
 
                         if(this.timeoutId) {
                             clearTimeout(this.timeoutId);
@@ -115,14 +116,17 @@ AdvancedHttpTemperatureHumidity.prototype = {
                         this.timeoutId=setTimeout(()=>{
                             // this._update(()=>{})
                             // console.log("call poll");
-                            this.getState(callback);
+                            this.getState();
                         }, this.pollInterval * 1000);                    
     
                     } else {
-                        console.log("no poll interval");
+                        this.log("no poll interval");
                     }
+
         
-                } catch(e) {}
+                } catch(e) {
+                    this.log(e);
+                }
             }
         }.bind(this));
     },
