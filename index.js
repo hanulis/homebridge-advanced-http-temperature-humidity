@@ -71,10 +71,29 @@ AdvancedHttpTemperatureHumidity.prototype = {
     },
 
     getState: function (callback) {
+
+        if(this.pollInterval) {
+            // this.log("poll interval : %s", this.pollInterval);
+
+            if(this.timeoutId) {
+                clearTimeout(this.timeoutId);
+            }
+
+            // let instance=this;
+            this.timeoutId=setTimeout(()=>{
+                // this._update(()=>{})
+                // console.log("call poll");
+                this.getState();
+            }, this.pollInterval * 1000);                    
+
+        } else {
+            // this.log("no poll interval");
+        }
+
         this.httpRequest(this.url, "", this.http_method, this.username, this.password, this.sendimmediately, function (error, response, responseBody) {
 
             if (error) {
-                this.log('Get Temperature failed: %s', error.message);
+                this.log('Get Temperature failed: %s, prev temp : %s', error.message, this.temperature);
                 callback(null, this.temperature);
             } else {
                 try {
@@ -116,24 +135,6 @@ AdvancedHttpTemperatureHumidity.prototype = {
 
                     this.temperatureService.setCharacteristic(Characteristic.CurrentTemperature, this.temperature);
                     this.humidityService.setCharacteristic(Characteristic.CurrentRelativeHumidity, this.humidity);
-
-                    if(this.pollInterval) {
-                        // this.log("poll interval : %s", this.pollInterval);
-
-                        if(this.timeoutId) {
-                            clearTimeout(this.timeoutId);
-                        }
-    
-                        // let instance=this;
-                        this.timeoutId=setTimeout(()=>{
-                            // this._update(()=>{})
-                            // console.log("call poll");
-                            this.getState();
-                        }, this.pollInterval * 1000);                    
-    
-                    } else {
-                        // this.log("no poll interval");
-                    }
 
         
                 } catch(e) {
